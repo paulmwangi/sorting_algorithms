@@ -1,75 +1,67 @@
 #include "sort.h"
 
 /**
- * heapify - Heapify the root element again so that we have the
- * highest element at root.
- * @array: Array of integers
- * @index: Index of the array
- * @size: Size of the array
- * Return: Void - No return
+ * swap -  swap two elements of the array
+ * @array: array to swap its elements
+ * @x: first element
+ * @y: second element
+ * Return: Nothing
  */
-void heapify(int *array, int index, size_t size)
+void swap(int *array, int x, int y)
 {
-	int larg = index;
-	size_t child_l = 2 * index + 1;
-	size_t child_r = 2 * index + 2;
+	int temp;
 
-	if (child_l < size && array[child_l] > array[larg])
-	{
-		larg = child_l;
-	}
-
-	if (child_r < size && array[child_r] > array[larg])
-	{
-		larg = child_r;
-	}
-
-	if (larg != index)
-	{
-		swap(&array[index], &array[larg]);
-		heapify(array, larg, size);
-	}
+	temp = array[x];
+	array[x] = array[y];
+	array[y] = temp;
 }
 /**
- * swap - Swap values Function
- * @a: Value
- * @b: Value
- * Return: Void - No return
+ * heapify - compare child nodes with parent node in the max heap
+ * @array: original array
+ * @n: part of the heap with nodes to compare
+ * @i: parent node
+ * @size: size of the original array
+ * Return: Nothing
  */
-void swap(int *a, int *b)
+void heapify(int *array, int n, int i, size_t size)
 {
-	int temp = *a;
-	*a = *b;
-	*b = temp;
+	int larg = i;
+	int lft = 2 * i + 1;
+	int rgt = 2 * i + 2;
+
+	if (lft < n && array[lft] > array[larg])
+		larg = lft;
+	if (rgt < n && array[rgt] > array[larg])
+		larg = rgt;
+	if (larg != i)
+	{
+		swap(array, i, larg);
+		print_array(array, size);
+		heapify(array, n, larg, size);
+	}
 }
 
 /**
- * heap_sort - Sorts an array of integers in ascending
- * order using the Heap sort algorithm
- * @array: Array of integers
- * @size: Size of the array
- * Return: Void - No return
+ * heap_sort - sort an array in ascending order using the Heap sort algorithm
+ * @array: array to be sorted
+ * @size: size of the array
+ * Return: Nothing
  */
 void heap_sort(int *array, size_t size)
 {
-	int i = 0;
+	int i;
 
+	if (array == NULL || size < 2)
+		return;
 	for (i = size / 2 - 1; i >= 0; i--)
 	{
-		heapify(array, i, size);
-		print_array(array, size);
+		heapify(array, size, i, size);
 	}
-
 	for (i = size - 1; i >= 0; i--)
 	{
-		swap(&array[0], &array[i]);
-		print_array(array, size);
-		/* Put root elem to get highest elem at the root again */
-		heapify(array, 0, i);
-		print_array(array, size);
+		swap(array, 0, i);
+		if (i != 0)
+			print_array(array, size);
+		heapify(array, i, 0, size);
 	}
 }
-
-
-
-
